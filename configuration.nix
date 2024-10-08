@@ -4,14 +4,14 @@
 
 { config, lib, pkgs, ... }:
 let
-  pinnedPkgs = pkgs.fetchFromGitHub { 
+  kernelPkgs = import (pkgs.fetchFromGitHub { 
     owner = "nixos"; 
     repo = "nixpkgs"; 
     rev = "1719f27dd95fd4206afb9cec9f415b539978827e"; 
     hash = "sha256-9/79hjQc9+xyH+QxeMcRsA6hDyw6Z9Eo1/oxjvwirLk="; 
-  };
-  kernelPkgs = import pinnedPkgs {}; 
-in
+  }) {};
+  masterPkgs = import (builtins.fetchTarball "https://github.com/nixos/nixpkgs/archive/master.tar.gz") {};
+ in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -81,17 +81,18 @@ in
       tree
       steam
       runelite
+      bitwarden
     ];
   };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    neovim fzf ripgrep
+    vim 
+    masterPkgs.neovim fzf ripgrep
+    git
     wget
-    kitty
-    tmux
+    kitty fish tmux
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
