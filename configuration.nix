@@ -89,10 +89,12 @@ let
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim 
-    masterPkgs.neovim fzf ripgrep
+    masterPkgs.neovim fzf ripgrep fd
     git
     wget
     kitty fish tmux
+    nixd nixfmt-rfc-style
+    };
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
