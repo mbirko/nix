@@ -18,7 +18,12 @@ let
       ./hardware-configuration.nix
       (import ./nixos-hardware/apple/t2 { pkgs = kernelPkgs; inherit lib config; })
       ./firmware.nix
+
+      ./modules/gui/default.nix
+      ./modules/tools/default.nix
     ];
+  
+  steam.enable = true; 
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -32,17 +37,14 @@ let
   # Set your time zone.
 
   time.timeZone = "Europe/Copenhagen";
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_DK.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
+
+  # Fonts 
+  fonts.packages = with pkgs; [
+    (nerdfonts.override { fonts = [ "OpenDyslexic" ]; }) 
+  ];
 
   # Enable the X11 windowing system.
   services.xserver = {
@@ -55,19 +57,11 @@ let
   nixpkgs.config.allowUnfree = true; 
 
   # Configure keymap in X11
-  # services.xserver.xkb.layout = "us";
   services.xserver.xkb.options = "eurosign:e,caps:escape";
 
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
 
   # Enable sound.
   hardware.pulseaudio.enable = true;
-  # OR
-  # services.pipewire = {
-  #   enable = true;
-  #   pulse.enable = true;
-  # };
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
@@ -79,20 +73,14 @@ let
     packages = with pkgs; [
       firefox
       tree
-      steam
       runelite
       bitwarden
     ];
   };
 
   # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim 
     masterPkgs.neovim fzf ripgrep
-    git
-    wget
-    kitty fish tmux
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
