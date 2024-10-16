@@ -94,7 +94,6 @@ let
     wget
     kitty fish tmux
     nixd nixfmt-rfc-style
-    };
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
